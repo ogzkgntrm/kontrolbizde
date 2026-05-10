@@ -113,8 +113,14 @@ let gameState = {
 
 // Canvas Resize
 function resize() {
-    canvas.width = Math.min(window.innerWidth * 0.9, 600); 
-    canvas.height = Math.min(window.innerHeight * 0.65, 600);
+    const container = document.querySelector('.game-content-area');
+    if (!container) return;
+    
+    // Set canvas resolution based on container
+    canvas.width = container.clientWidth;
+    canvas.height = container.clientHeight;
+    
+    // Lane positions based on dynamic width
     const lw = canvas.width / 4;
     gameState.lanes = [lw * 0.5, lw * 1.5, lw * 2.5, lw * 3.5];
 }
@@ -284,7 +290,7 @@ function spawnObject() {
         gameState.objects.push({
             lane: lane,
             y: -50,
-            size: 60,
+            size: canvas.width / 8,
             ...obj
         });
     } else if (gameState.mode === 'customs') {
@@ -300,8 +306,8 @@ function spawnObject() {
         gameState.objects.push({
             x: canvas.width / 2,
             y: -50,
-            width: 140,
-            height: 100,
+            width: Math.min(canvas.width * 0.4, 180),
+            height: Math.min(canvas.height * 0.15, 120),
             ...obj
         });
     }
