@@ -741,3 +741,89 @@ canvas {
 .flash-error {
     animation: flashRed 0.5s ease-out;
 }
+
+/* --- Responsive Design --- */
+
+/* Medium Devices (Tablets, 992px and down) */
+@media (max-width: 992px) {
+    .container { padding: 1.5rem; }
+    .hero h1 { font-size: 3.5rem; }
+    .nav-links { gap: 1rem; }
+    .nav-links a { font-size: 0.9rem; }
+}
+
+/* Small Devices (Phones, 768px and down) */
+@media (max-width: 768px) {
+    .main-header { padding: 1rem 0; gap: 1rem; }
+    
+    .top-logos { 
+        gap: 15px; 
+        padding: 0 10px;
+    }
+    
+    .logo-circle {
+        width: 80px;
+        height: 80px;
+    }
+
+    .navbar { width: 95%; }
+    
+    .nav-links {
+        display: none; /* Hidden by default on mobile */
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: rgba(9, 32, 21, 0.98);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        padding: 2rem;
+        gap: 1.5rem;
+        border-radius: 0 0 30px 30px;
+        border: 1px solid rgba(0, 150, 57, 0.3);
+        border-top: none;
+        z-index: 1000;
+    }
+
+    .nav-links.active {
+        display: flex;
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    .mobile-menu-btn {
+        display: block;
+        font-size: 1.5rem;
+        color: white;
+        cursor: pointer;
+    }
+
+    .school-tag { display: none; }
+    
+    .hero { min-height: auto; padding: 12rem 1.5rem 6rem 1.5rem; }
+    .hero .container { padding-top: 0; }
+    .hero h1 { font-size: 2.5rem; }
+    
+    .grid-2, .grid-3, .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .section-header h2 { font-size: 2rem; }
+    
+    /* Game Area on Mobile */
+    #game-container {
+        padding: 0.5rem;
+    }
+    
+    .game-content-area {
+        height: 60vh;
+    }
+}
+
+/* Extra Small Devices */
+@media (max-width: 480px) {
+    .top-logos { gap: 10px; }
+    .logo-circle { width: 60px; height: 60px; }
+    .logo-wrapper { padding: 5px 12px; }
+    .logo { font-size: 0.9rem; }
+    .hero h1 { font-size: 2rem; }
+}
