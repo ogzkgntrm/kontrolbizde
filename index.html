@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontrol Bizde | Sağlık Terminali</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="bg-blobs">
+        <div class="blob"></div>
+        <div class="blob"></div>
+    </div>
+    
+    <!-- Preload FontAwesome for Canvas -->
+    <div style="font-family: 'Font Awesome 6 Free'; font-weight: 900; display: none;">&nbsp;</div>
+
+    <div id="main-ui">
+        <!-- Fixed Main Header with Frosted Effect -->
+        <header class="main-header">
+            <div class="top-logos">
+                <a href="https://izmirsaglikliyasamligi.com" target="_blank" class="logo-circle" title="Yeşilay"><img src="logolar/yesilayLogo.png" alt="Yeşilay"></a>
+                <a href="https://arkasnarlideremtal.meb.k12.tr" target="_blank" class="logo-circle" title="Arkas"><img src="logolar/arkasMtalLogo.png" alt="Arkas"></a>
+                <a href="projelerimiz.html" class="logo-circle" title="Kontrol Bizde"><img src="logolar/kontrolBizdeLogo.png" alt="Kontrol Bizde"></a>
+                <a href="https://www.meb.gov.tr" target="_blank" class="logo-circle" title="Milli Eğitim"><img src="logolar/mebLogo.png" alt="MEB"></a>
+            </div>
+
+            <nav class="navbar">
+                <div class="container nav-content">
+                    <div class="logo-wrapper">
+                        <div class="logo"><span>KONTROL</span> BİZDE</div>
+                    </div>
+                    <ul class="nav-links">
+                        <li><a href="#home">Ana Sayfa</a></li>
+                        <li><a href="projelerimiz.html">Projelerimiz</a></li>
+                        <li><a href="#mission">Misyonumuz</a></li>
+                        <li><a href="#team">Ekibimiz</a></li>
+                        <li><a href="#stations">Sağlık Durakları</a></li>
+                        <li><a href="#info">Bilgi Noktası</a></li>
+                    </ul>
+                    <div class="school-tag">Sağlık Terminali</div>
+                </div>
+            </nav>
+        </header>
+
+        <section id="home" class="hero">
+            <div class="container">
+                <h1>Bağımlılığa Karşı<br><span>Sağlıklı Harekete Katıl!</span></h1>
+                <p>Bedenini ve zihnini korumak senin elinde. Sağlık duraklarını tamamla, zararlı alışkanlıklara geçiş
+                    verme!</p>
+                <div class="hero-btns">
+                    <a href="#stations" class="btn btn-primary active-pulse" onclick="playSound('click')">Duraklara
+                        Git</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="stations" class="section bg-alt">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Sağlık <span>Durakları</span></h2>
+                    <p>Farklı konseptlerde kendini test et, bağımlılıktan uzak dur.</p>
+                </div>
+                <div class="grid-2">
+                    <div class="card glass">
+                        <div class="icon" style="font-size: 3rem; margin-bottom: 1rem; color: var(--primary);"><i
+                                class="fa-solid fa-puzzle-piece"></i></div>
+                        <h3>Durak 1: Kayıp Yükü Bul</h3>
+                        <p style="margin-bottom: 1.5rem; color: var(--text-muted);">Verilen ipuçlarıyla sağlık ve
+                            hareket kelimelerini bul. Eksik harfleri tamamla!</p>
+                        <button onclick="startGame('puzzle')" class="btn btn-primary"
+                            style="padding: 0.8rem 1.5rem; width: 100%;">Görevi Başlat</button>
+                    </div>
+                    <div class="card glass">
+                        <div class="icon" style="font-size: 3rem; margin-bottom: 1rem; color: var(--primary);"><i
+                                class="fa-solid fa-road"></i></div>
+                        <h3>Durak 2: Rota Kontrol</h3>
+                        <p style="margin-bottom: 1.5rem; color: var(--text-muted);">Sağlık yolunda 3 şeritte güvenle
+                            ilerle. Zararlı engellerden kaç, sağlıklı olanları topla.</p>
+                        <button onclick="startGame('route')" class="btn btn-primary"
+                            style="padding: 0.8rem 1.5rem; width: 100%;">Oyunu Oyna</button>
+                    </div>
+                    <div class="card glass">
+                        <div class="icon" style="font-size: 3rem; margin-bottom: 1rem; color: var(--primary);"><i
+                                class="fa-solid fa-shield-halved"></i></div>
+                        <h3>Durak 3: Gümrük Kontrolü</h3>
+                        <p style="margin-bottom: 1.5rem; color: var(--text-muted);">Sağlıklı alışkanlıklara geçiş ver,
+                            zararlıları reddet. Gözün açık olsun, hızlanacak!</p>
+                        <button onclick="startGame('customs')" class="btn btn-primary"
+                            style="padding: 0.8rem 1.5rem; width: 100%;">Göreve Başla</button>
+                    </div>
+                    <div class="card glass">
+                        <div class="icon" style="font-size: 3rem; margin-bottom: 1rem; color: var(--primary);"><i
+                                class="fa-solid fa-clipboard-list"></i></div>
+                        <h3>Durak 4: Sağlık Analizi</h3>
+                        <p style="margin-bottom: 1.5rem; color: var(--text-muted);">Gündelik alışkanlıkların ne kadar
+                            sağlıklı? Kendini test et, risk profilini öğren.</p>
+                        <button onclick="startGame('quiz')" class="btn btn-primary"
+                            style="padding: 0.8rem 1.5rem; width: 100%;">Teste Katıl</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="info" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Bilgi <span>Noktası</span></h2>
+                    <p>Zararlı alışkanlıkların geçişine izin yok.</p>
+                </div>
+                <div class="info-grid">
+                    <div class="info-card glass" onclick="showInfo('tech')">
+                        <h4>Teknoloji</h4>
+                        <p>Ekran süreni kontrol etmezsen, o seni kontrol eder.</p>
+                    </div>
+                    <div class="info-card glass" onclick="showInfo('tobacco')">
+                        <h4>Tütün</h4>
+                        <p>Nefesini özgür bırak, hayatı derin çek.</p>
+                    </div>
+                    <div class="info-card glass" onclick="showInfo('substance')">
+                        <h4>Madde</h4>
+                        <p>Hayatın renklerini sahte mutluluklara değişme.</p>
+                    </div>
+                    <div class="info-card glass" onclick="showInfo('alcohol')">
+                        <h4>Alkol</h4>
+                        <p>Berrak bir zihin, en büyük özgürlüktür.</p>
+                    </div>
+                    <div class="info-card glass" onclick="showInfo('gambling')">
+                        <h4>Kumar</h4>
+                        <p>Kazanmak için değil, kaybetmemek için dur.</p>
+                    </div>
+                    <div class="info-card glass" onclick="showInfo('movement')">
+                        <h4>Hareket</h4>
+                        <p>Harekette bereket, sağlıkta gelecek vardır.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projelerimiz Artık Modal Olarak Çalışıyor, Buradan Kaldırıldı -->
+
+
+        <section id="mission" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Misyonumuz <span>Amacımız</span></h2>
+                    <p>Neden buradayız?</p>
+                </div>
+                <div class="glass">
+                    <p style="font-size: 1.2rem; line-height: 1.8;">Misyonumuz; gençlerin fiziksel ve ruhsal sağlığını
+                        korumak, bağımlılıklara karşı farkındalık yaratmak ve sağlıklı yaşam kültürünü eğlenceli ve
+                        interaktif yöntemlerle yaygınlaştırmaktır. "Kontrol Bizde" diyerek geleceğimizi birlikte inşa
+                        ediyoruz.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="team" class="section bg-alt">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Ekibimiz <span>Yol Arkadaşlarımız</span></h2>
+                    <p>Bu projeye emek veren profesyoneller ve gönüllüler.</p>
+                </div>
+                <div class="info-grid">
+                    <div class="glass info-card">
+                        <i class="fas fa-user-md"
+                            style="font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem;"></i>
+                        <h4>10/A ATP</h4>
+                        <p>10/A ATP sınıfı öğrencileri</p>
+                    </div>
+                    <div class="glass info-card">
+                        <i class="fas fa-graduation-cap"
+                            style="font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem;"></i>
+                        <h4>Eğitimciler</h4>
+                        <p>Arkas MTAL'in değerli öğretmenleri</p>
+                    </div>
+                    <div class="glass info-card">
+                        <i class="fas fa-hands-helping"
+                            style="font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem;"></i>
+                        <h4>Gönüllüler</h4>
+                        <p>Bize destek olan büyük ailemiz.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <div class="container">
+                <p>&copy; 2026 KONTROL BİZDE | Sağlıklı Yaşam Platformu</p>
+                <div class="social-links">
+                    <span>#Yeşilay</span> <span>#KontrolBizde</span> <span>#SağlıklıYaşam</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Game Container Overlay -->
+    <div id="game-container">
+        <div class="game-header">
+            <div class="logo" style="font-size: 1.2rem;"><span>SAĞLIK</span> TERMİNALİ</div>
+            <div class="score-board" id="score-wrapper">
+                <div id="game-stats" style="display: flex; gap: 2rem; align-items: center;">
+                    <div>Skor: <span id="current-score" class="pulse-text">0</span></div>
+                    <div id="lives-wrapper" style="display: none; color: var(--danger); font-size: 1.5rem;">Can: <span
+                            id="current-lives">3</span></div>
+                </div>
+            </div>
+            <button class="btn btn-exit" onclick="exitGame()">Çıkış Yap</button>
+        </div>
+
+        <div class="game-content-area">
+            <!-- CANVAS GAMES (Route & Customs) -->
+            <canvas id="gameCanvas"></canvas>
+
+            <!-- QUIZ GAME (Assessment) -->
+            <div id="quiz-container" class="glass-panel" style="display: none;">
+                <div class="timer-wrap">
+                    <div id="quiz-progress-fill"></div>
+                </div>
+                <div class="quiz-header">
+                    <span id="quiz-progress-text">Soru 1/5</span>
+                </div>
+                <h2 id="quiz-question">Soru Metni</h2>
+                <div id="quiz-options" class="quiz-grid"></div>
+            </div>
+
+            <!-- PUZZLE GAME (Hangman Style) -->
+            <div id="puzzle-container" class="glass-panel" style="display: none;">
+                <h2>Kayıp Yükü Bul</h2>
+                <p id="puzzle-clue"
+                    style="color: var(--accent); margin-bottom: 1rem; font-size: 1.4rem; font-style: italic;">İpucu
+                    buraya gelecek</p>
+
+                <div
+                    style="display: flex; justify-content: center; align-items: center; gap: 2rem; margin-bottom: 2rem;">
+                    <div id="puzzle-lives" style="color: var(--danger); font-size: 1.8rem; font-weight: 800;">Kalan Hak:
+                        5</div>
+                    <button class="btn"
+                        style="background: rgba(0, 150, 57, 0.2); border-color: var(--primary); color: white;"
+                        onclick="getPuzzleHint()">Harf Al (20 Puan)</button>
+                </div>
+
+                <div id="puzzle-target" class="puzzle-target-area"></div>
+                <div id="puzzle-keyboard" class="puzzle-keyboard"></div>
+            </div>
+        </div>
+
+        <div id="game-overlay" class="glass-panel overlay-panel" style="display: none;">
+            <h2 id="overlay-title" style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--text-main);">Görev
+                Tamamlandı</h2>
+            <div id="overlay-msg"
+                style="margin-bottom: 2rem; font-size: 1.2rem; color: var(--text-muted); line-height: 1.6;">Skorun: 0
+            </div>
+            <button class="btn btn-primary" onclick="restartGame()"
+                style="font-size: 1.1rem; padding: 1rem 3rem;">Tekrar Dene</button>
+        </div>
+    </div>
+
+    <!-- Error Flash overlay for puzzle -->
+    <div id="error-flash"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,0,0,0.3); z-index: 999; pointer-events: none;">
+    </div>
+
+    <!-- Site Modal (Unified Internal Messaging) -->
+    <div id="modal-backdrop"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1999; backdrop-filter: blur(5px);"
+        onclick="closeModal()"></div>
+    <div id="site-modal" class="glass-panel overlay-panel"
+        style="display: none; z-index: 2000; position: fixed; text-align: center; max-width: 500px;">
+        <div id="modal-icon" style="font-size: 3.5rem; color: var(--primary); margin-bottom: 1.5rem;"><i
+                class="fa-solid fa-circle-info"></i></div>
+        <h2 id="modal-title" style="font-size: 2.2rem; margin-bottom: 1rem; color: var(--text-main); font-weight: 800;">
+            Başlık</h2>
+        <div id="modal-desc"
+            style="font-size: 1.2rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 2.5rem;">Açıklama</div>
+        <button id="modal-btn" class="btn btn-primary" onclick="closeModal()"
+            style="width: 100%; font-size: 1.1rem;">Anladım</button>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
