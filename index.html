@@ -205,10 +205,9 @@
         <div class="game-header">
             <div class="logo" style="font-size: 1.2rem;"><span>SAĞLIK</span> TERMİNALİ</div>
             <div class="score-board" id="score-wrapper">
-                <div id="game-stats" style="display: flex; gap: 2rem; align-items: center;">
-                    <div>Skor: <span id="current-score" class="pulse-text">0</span></div>
-                    <div id="lives-wrapper" style="display: none; color: var(--danger); font-size: 1.5rem;">Can: <span
-                            id="current-lives">3</span></div>
+                <div id="game-stats" class="game-stats-container">
+                    <div class="stat-item">SKOR: <span id="current-score" class="pulse-text">0</span></div>
+                    <div id="lives-wrapper" class="stat-item lives-item" style="display: none;">CAN: <span id="current-lives">3</span></div>
                 </div>
             </div>
             <button class="btn btn-exit" onclick="exitGame()">Çıkış Yap</button>
@@ -241,9 +240,7 @@
                     style="display: flex; justify-content: center; align-items: center; gap: 2rem; margin-bottom: 2rem;">
                     <div id="puzzle-lives" style="color: var(--danger); font-size: 1.8rem; font-weight: 800;">Kalan Hak:
                         5</div>
-                    <button class="btn"
-                        style="background: rgba(0, 150, 57, 0.2); border-color: var(--primary); color: white;"
-                        onclick="getPuzzleHint()">Harf Al (20 Puan)</button>
+                    <button class="btn btn-hint" onclick="getPuzzleHint()">Harf Al (20 Puan)</button>
                 </div>
 
                 <div id="puzzle-target" class="puzzle-target-area"></div>

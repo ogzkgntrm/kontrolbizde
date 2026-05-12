@@ -290,7 +290,8 @@ function spawnObject() {
         gameState.objects.push({
             lane: lane,
             y: -50,
-            size: canvas.width / 8,
+            width: Math.min(canvas.width / 6, 120),
+            height: Math.min(canvas.width / 7, 90),
             ...obj
         });
     } else if (gameState.mode === 'customs') {
@@ -399,9 +400,9 @@ canvas.addEventListener('mousedown', e => {
                 playSound('good');
                 updateScoreUI(gameState.score + 20);
                 gameState.objects.shift();
-                if (gameState.speed < 4.5) {
-                    gameState.speed += 0.15;
-                }
+            if (gameState.speed < 7.5) { // Increased max speed
+                gameState.speed += 0.3; // Increased acceleration
+            }
             } else {
                 flashError();
                 gameState.lives--;
@@ -456,16 +457,21 @@ function draw() {
         ctx.fillText('\uf70c', gameState.lanes[gameState.player.lane], canvas.height - 80);
 
         gameState.objects.forEach(obj => {
+            // Draw card base like Customs Control
+            ctx.fillStyle = '#ffffff';
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = 'rgba(255,255,255,0.2)';
             ctx.beginPath();
-            ctx.arc(gameState.lanes[obj.lane], obj.y, obj.size/2, 0, Math.PI*2);
-            ctx.fillStyle = 'rgba(255,255,255,0.9)';
+            ctx.roundRect(gameState.lanes[obj.lane] - obj.width/2, obj.y - obj.height/2, obj.width, obj.height, 12);
             ctx.fill();
-            ctx.lineWidth = 4;
-            ctx.strokeStyle = obj.color;
-            ctx.stroke();
-            ctx.font = `900 ${obj.size - 25}px "Font Awesome 6 Free"`;
+            ctx.shadowBlur = 0;
+
+            // Draw Icon
+            ctx.font = `900 ${Math.min(obj.height * 0.6, 40)}px "Font Awesome 6 Free"`;
             ctx.fillStyle = obj.color;
-            ctx.fillText(obj.char, gameState.lanes[obj.lane], obj.y + 2);
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(obj.char, gameState.lanes[obj.lane], obj.y);
         });
 
     } else if (gameState.mode === 'customs') {
