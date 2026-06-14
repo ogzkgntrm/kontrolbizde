@@ -111,14 +111,44 @@ let gameState = {
     animationId: null
 };
 
+// Helper for dynamic player sizing in Route Game
+function getPlayerSpecs() {
+    const lw = canvas.width / 4;
+    const radius = Math.min(lw * 0.4, 35);
+    const y = canvas.height - Math.max(50, radius * 2.2);
+    return {
+        radius: radius,
+        y: y,
+        fontSize: radius * 1.3
+    };
+}
+
 // Canvas Resize
 function resize() {
     const container = document.querySelector('.game-content-area');
     if (!container) return;
     
-    // Set canvas resolution based on container
-    canvas.width = container.clientWidth;
-    canvas.height = container.clientHeight;
+    let targetWidth = container.clientWidth;
+    let targetHeight = container.clientHeight;
+    
+    if (gameState.mode === 'route') {
+        // Limit aspect ratio to portrait (e.g. max width = 0.8 * height)
+        const maxRatio = 0.8;
+        if (targetWidth > targetHeight * maxRatio) {
+            targetWidth = targetHeight * maxRatio;
+        }
+    } else if (gameState.mode === 'customs') {
+        // Limit aspect ratio to balanced landscape (e.g. max width = 1.3 * height)
+        const maxRatio = 1.3;
+        if (targetWidth > targetHeight * maxRatio) {
+            targetWidth = targetHeight * maxRatio;
+        }
+    }
+    
+    canvas.width = targetWidth;
+    canvas.height = targetHeight;
+    canvas.style.width = `${targetWidth}px`;
+    canvas.style.height = `${targetHeight}px`;
     
     // Lane positions based on dynamic width
     const lw = canvas.width / 4;
@@ -131,6 +161,32 @@ resize();
 const keys = {};
 window.addEventListener('keydown', (e) => keys[e.code] = true);
 window.addEventListener('keyup', (e) => keys[e.code] = false);
+
+// Unified Customs Game processing
+function processCustomsInput(isLeft) {
+    if (gameState.objects.length === 0) return;
+    const obj = gameState.objects[0];
+
+    if ((isLeft && obj.type === 'bad') || (!isLeft && obj.type === 'good')) {
+        playSound('good');
+        updateScoreUI(gameState.score + 20);
+        gameState.objects.shift();
+        if (gameState.speed < 7.5) {
+            gameState.speed += 0.3;
+        }
+    } else {
+        flashError();
+        gameState.lives--;
+        gameState.speed = 1.5; // Can azalınca gümrük yavaşlar
+        document.getElementById('current-lives').innerText = gameState.lives;
+        const sideText = isLeft ? "reddetme" : "kabul";
+        if (gameState.lives <= 0) {
+            gameOver(`Hatalı ${sideText} yaptın! Sınır güvenliği aşıldı.`);
+        } else {
+            gameState.objects.shift(); // Hatalı olanı kaldır ve devam et
+        }
+    }
+}
 
 // Mobile Touch Controls for Canvas Games
 canvas.addEventListener('touchstart', (e) => {
@@ -148,44 +204,10 @@ canvas.addEventListener('touchstart', (e) => {
         }
         playSound('click');
     } else if (gameState.mode === 'customs') {
-        handleCustomsInput(touchX);
+        processCustomsInput(touchX < canvasMid);
     }
     e.preventDefault();
 }, { passive: false });
-
-function handleCustomsInput(x) {
-    if (gameState.objects.length === 0) return;
-    const obj = gameState.objects[0];
-    const canvasMid = canvas.width / 2;
-
-    if (x < canvasMid) {
-        // Reddet (Sol)
-        if (obj.type === 'bad') {
-            playSound('good');
-            updateScoreUI(gameState.score + 10);
-            gameState.objects.shift();
-        } else {
-            flashError();
-            gameState.lives--;
-            document.getElementById('current-lives').innerText = gameState.lives;
-            if(gameState.lives <= 0) gameOver("Hatalı reddetme yaptın!");
-            gameState.objects.shift();
-        }
-    } else {
-        // Kabul Et (Sağ)
-        if (obj.type === 'good') {
-            playSound('good');
-            updateScoreUI(gameState.score + 10);
-            gameState.objects.shift();
-        } else {
-            flashError();
-            gameState.lives--;
-            document.getElementById('current-lives').innerText = gameState.lives;
-            if(gameState.lives <= 0) gameOver("Hatalı kabul yaptın!");
-            gameState.objects.shift();
-        }
-    }
-}
 
 // Input handling
 window.addEventListener('keydown', e => {
@@ -208,6 +230,7 @@ let wrongGuesses = 0;
 
 // Start game manager
 function startGame(mode) {
+    document.body.classList.add('game-active');
     gameState.mode = mode;
     gameState.score = 0;
     updateScoreUI(0);
@@ -261,6 +284,7 @@ function startGame(mode) {
 }
 
 function exitGame() {
+    document.body.classList.remove('game-active');
     playSound('click');
     gameState.active = false;
     cancelAnimationFrame(gameState.animationId);
@@ -329,8 +353,8 @@ function update() {
             let obj = gameState.objects[i];
             obj.y += gameState.speed;
             
-            const playerY = canvas.height - 80;
-            if (obj.y > playerY - 40 && obj.y < playerY + 40) {
+            const specs = getPlayerSpecs();
+            if (obj.y > specs.y - specs.radius - 10 && obj.y < specs.y + specs.radius + 10) {
                 if (obj.lane === gameState.player.lane) {
                     if (obj.type === 'good') {
                         playSound('good');
@@ -364,7 +388,8 @@ function update() {
         for (let i = gameState.objects.length - 1; i >= 0; i--) {
             let obj = gameState.objects[i];
             obj.y += gameState.speed;
-            if (obj.y > canvas.height - 100) {
+            const btnHeight = Math.min(canvas.height * 0.25, 100);
+            if (obj.y > canvas.height - btnHeight) {
                 if(obj.type === 'good') {
                     flashError();
                     updateScoreUI(gameState.score - 10);
@@ -392,29 +417,7 @@ canvas.addEventListener('mousedown', e => {
         else gameState.player.lane = 3;
         playSound('click');
     } else if (gameState.mode === 'customs') {
-        if (gameState.objects.length > 0) {
-            const obj = gameState.objects[0];
-            const isLeft = mx < canvas.width / 2;
-            
-            if ((isLeft && obj.type === 'bad') || (!isLeft && obj.type === 'good')) {
-                playSound('good');
-                updateScoreUI(gameState.score + 20);
-                gameState.objects.shift();
-            if (gameState.speed < 7.5) { // Increased max speed
-                gameState.speed += 0.3; // Increased acceleration
-            }
-            } else {
-                flashError();
-                gameState.lives--;
-                gameState.speed = 1.5; // Can azalınca gümrük yavaşlar
-                document.getElementById('current-lives').innerText = gameState.lives;
-                if (gameState.lives <= 0) {
-                    gameOver("Hatalı gümrük işlemi! Sınır güvenliği aşıldı.");
-                } else {
-                    gameState.objects.shift(); // Hatalı olanı kaldır ve devam et
-                }
-            }
-        }
+        processCustomsInput(mx < canvas.width / 2);
     }
 });
 
@@ -445,16 +448,17 @@ function draw() {
         }
         ctx.setLineDash([]);
 
+        const specs = getPlayerSpecs();
         ctx.beginPath();
-        ctx.arc(gameState.lanes[gameState.player.lane], canvas.height - 80, 35, 0, Math.PI*2);
+        ctx.arc(gameState.lanes[gameState.player.lane], specs.y, specs.radius, 0, Math.PI*2);
         ctx.fillStyle = 'rgba(255,255,255,0.9)';
         ctx.fill();
 
-        ctx.font = '900 45px "Font Awesome 6 Free"';
+        ctx.font = `900 ${specs.fontSize}px "Font Awesome 6 Free"`;
         ctx.fillStyle = '#000';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText('\uf70c', gameState.lanes[gameState.player.lane], canvas.height - 80);
+        ctx.fillText('\uf70c', gameState.lanes[gameState.player.lane], specs.y);
 
         gameState.objects.forEach(obj => {
             // Draw card base like Customs Control
@@ -475,17 +479,21 @@ function draw() {
         });
 
     } else if (gameState.mode === 'customs') {
+        const roadWidth = Math.min(canvas.width * 0.6, 240);
         ctx.fillStyle = 'rgba(255,255,255,0.05)';
-        ctx.fillRect(canvas.width/2 - 120, 0, 240, canvas.height);
+        ctx.fillRect(canvas.width/2 - roadWidth/2, 0, roadWidth, canvas.height);
+        
+        const btnHeight = Math.min(canvas.height * 0.25, 100);
         ctx.fillStyle = 'rgba(255, 75, 43, 0.2)';
-        ctx.fillRect(0, canvas.height - 100, canvas.width/2, 100);
+        ctx.fillRect(0, canvas.height - btnHeight, canvas.width/2, btnHeight);
         ctx.fillStyle = 'rgba(0, 150, 57, 0.2)';
-        ctx.fillRect(canvas.width/2, canvas.height - 100, canvas.width/2, 100);
-        ctx.font = 'bold 20px Inter';
+        ctx.fillRect(canvas.width/2, canvas.height - btnHeight, canvas.width/2, btnHeight);
+        
+        ctx.font = `bold ${Math.min(btnHeight * 0.25, 20)}px Inter`;
         ctx.fillStyle = '#fff';
         ctx.textAlign = 'center';
-        ctx.fillText('İADE ET', canvas.width/4, canvas.height - 40);
-        ctx.fillText('GEÇİŞ VER', canvas.width*0.75, canvas.height - 40);
+        ctx.fillText('İADE ET', canvas.width/4, canvas.height - btnHeight/2 + Math.min(btnHeight * 0.08, 7));
+        ctx.fillText('GEÇİŞ VER', canvas.width*0.75, canvas.height - btnHeight/2 + Math.min(btnHeight * 0.08, 7));
 
         gameState.objects.forEach(obj => {
             ctx.fillStyle = '#ffffff';
@@ -495,14 +503,19 @@ function draw() {
             ctx.roundRect(obj.x - obj.width/2, obj.y - obj.height/2, obj.width, obj.height, 15);
             ctx.fill();
             ctx.shadowBlur = 0;
-            ctx.font = '900 35px "Font Awesome 6 Free"';
+            
+            const iconSize = Math.min(obj.height * 0.45, 35);
+            const textSize = Math.min(obj.height * 0.2, 16);
+            
+            ctx.font = `900 ${iconSize}px "Font Awesome 6 Free"`;
             ctx.fillStyle = obj.type === 'good' ? '#009639' : '#ff4b2b';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText(obj.icon, obj.x, obj.y - 12);
+            ctx.fillText(obj.icon, obj.x, obj.y - obj.height * 0.15);
+            
             ctx.fillStyle = '#111';
-            ctx.font = 'bold 16px Inter';
-            ctx.fillText(obj.text, obj.x, obj.y + 30);
+            ctx.font = `bold ${textSize}px Inter`;
+            ctx.fillText(obj.text, obj.x, obj.y + obj.height * 0.25);
         });
     }
 }
@@ -712,9 +725,9 @@ function renderPuzzle() {
     words.forEach(wordStr => {
         const wordRow = document.createElement('div');
         wordRow.style.display = 'flex';
-        wordRow.style.gap = '0.8rem';
+        wordRow.style.gap = 'clamp(4px, 1.5vw, 12px)';
         wordRow.style.justifyContent = 'center';
-        wordRow.style.marginBottom = '0.5rem';
+        wordRow.style.marginBottom = 'clamp(4px, 1.5vw, 8px)';
 
         for(let i=0; i<wordStr.length; i++) {
             const char = wordStr[i];
@@ -780,8 +793,8 @@ function renderKeyboard() {
         const rowDiv = document.createElement('div');
         rowDiv.style.display = 'flex';
         rowDiv.style.justifyContent = 'center';
-        rowDiv.style.gap = '0.5rem';
-        rowDiv.style.marginBottom = '0.5rem';
+        rowDiv.style.gap = 'clamp(4px, 1.2vw, 8px)';
+        rowDiv.style.marginBottom = 'clamp(4px, 1.2vw, 8px)';
         
         for (let char of row) {
             const btn = document.createElement('div');

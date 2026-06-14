@@ -447,7 +447,6 @@ body {
     .nav-links { display: none; }
     .grid-2, .info-grid { grid-template-columns: 1fr; }
     .hero h1 { font-size: 3rem; }
-    .top-logos { display: none; } 
     .navbar { top: 1rem; width: 95%; border-radius: 20px; }
     .hero { padding: 12rem 1rem 5rem 1rem; }
 }
@@ -704,9 +703,9 @@ canvas {
 }
 
 .key-btn {
-    width: 45px;
-    height: 55px;
-    font-size: 1.2rem;
+    width: clamp(32px, 7vw, 45px);
+    height: clamp(42px, 9vw, 55px);
+    font-size: clamp(0.9rem, 2.5vw, 1.2rem);
     font-weight: 600;
     border-radius: 8px;
     background: rgba(255,255,255,0.1);
@@ -785,16 +784,24 @@ canvas {
 
 /* Small Devices (Phones, 768px and down) */
 @media (max-width: 768px) {
-    .main-header { padding: 1rem 0; gap: 1rem; }
+    .main-header {
+        top: 0.5rem;
+        padding: 0.5rem 0;
+        gap: 0.5rem;
+    }
     
     .top-logos { 
-        gap: 15px; 
+        display: flex;
+        justify-content: center;
+        gap: clamp(10px, 3vw, 20px); 
         padding: 0 10px;
+        margin-bottom: 0.5rem;
     }
     
     .logo-circle {
-        width: 80px;
-        height: 80px;
+        min-width: 60px;
+        width: clamp(60px, 15vw, 100px);
+        height: clamp(50px, 12vw, 80px);
     }
 
     .navbar { width: 95%; }
@@ -849,12 +856,12 @@ canvas {
         padding: 1rem !important;
     }
     
-    .quiz-options {
+    .quiz-grid {
         grid-template-columns: 1fr !important;
         gap: 0.8rem !important;
     }
 
-    .option-btn {
+    .quiz-btn {
         padding: 1rem !important;
         font-size: 0.95rem !important;
     }
@@ -874,8 +881,10 @@ canvas {
     }
 
     .game-content-area {
-        height: 55vh;
-        margin: 10px 0;
+        flex: 1 !important;
+        min-height: 0 !important;
+        margin: 5px 0 !important;
+        height: auto !important;
     }
 
     .btn-exit {
@@ -908,4 +917,146 @@ canvas {
     .section-header h2 { font-size: 1.6rem; }
     
     .card.glass { padding: 1.5rem; }
+}
+
+/* Landscape Orientation optimization */
+@media (max-height: 500px) and (orientation: landscape) {
+    .main-header {
+        position: relative !important;
+        top: 0 !important;
+        padding: 0.5rem 0 !important;
+        gap: 0.5rem !important;
+        background: rgba(9, 32, 21, 0.95) !important;
+    }
+    
+    .top-logos {
+        display: none !important;
+    }
+
+    .hero {
+        padding: 4rem 1.5rem 2rem 1.5rem !important;
+        min-height: auto !important;
+    }
+    
+    .hero .container {
+        padding-top: 0 !important;
+    }
+
+    .section {
+        padding: 4rem 0 2rem 0 !important;
+    }
+
+    #game-container {
+        padding: 8px !important;
+    }
+
+    .game-header {
+        padding: 0.3rem 1rem !important;
+        margin-bottom: 0.5rem !important;
+        border-radius: 10px !important;
+    }
+
+    .game-content-area {
+        margin: 0 !important;
+        height: calc(100vh - 65px) !important;
+    }
+
+    .game-stats-container {
+        gap: 1.5rem !important;
+        padding: 0.2rem 1.2rem !important;
+    }
+
+    .stat-item {
+        font-size: 0.95rem !important;
+    }
+
+    .btn-exit {
+        padding: 0.3rem 1rem !important;
+        font-size: 0.85rem !important;
+        margin-top: 0 !important;
+        width: auto !important;
+    }
+    
+    /* Quiz Landscape Adjustments */
+    #quiz-question {
+        font-size: 1.3rem !important;
+        margin-bottom: 1rem !important;
+    }
+    
+    .quiz-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.8rem !important;
+        max-width: 750px !important;
+    }
+
+    .quiz-btn {
+        padding: 0.6rem 1rem !important;
+        font-size: 0.9rem !important;
+        border-radius: 8px !important;
+    }
+
+    .quiz-btn .option-letter {
+        width: 30px !important;
+        height: 30px !important;
+        margin-right: 0.8rem !important;
+        font-size: 0.85rem !important;
+    }
+}
+
+/* Orientation Warning Overlay */
+#orientation-warning {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #092015;
+    z-index: 99999;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+    box-sizing: border-box;
+}
+
+#orientation-warning .warning-content {
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+#orientation-warning h3 {
+    font-size: 1.8rem;
+    color: #fff;
+    font-weight: 800;
+    margin: 0;
+}
+
+#orientation-warning p {
+    font-size: 1rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin: 0;
+}
+
+#orientation-warning .rotate-animation {
+    font-size: 4.5rem;
+    color: var(--primary);
+    animation: rotateDevice 2.5s infinite ease-in-out;
+}
+
+@keyframes rotateDevice {
+    0% { transform: rotate(0deg); }
+    50% { transform: rotate(-90deg); }
+    100% { transform: rotate(0deg); }
+}
+
+@media (max-width: 992px) and (orientation: portrait) {
+    body.game-active #orientation-warning {
+        display: flex;
+    }
 }
