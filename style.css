@@ -984,20 +984,27 @@ canvas {
     }
     
     /* Quiz Landscape Adjustments */
+    #quiz-container {
+        padding: 0.5rem 1rem !important;
+    }
+    .quiz-header {
+        margin-bottom: 0.5rem !important;
+    }
     #quiz-question {
-        font-size: 1.3rem !important;
-        margin-bottom: 1rem !important;
+        font-size: 1.1rem !important;
+        margin-bottom: 0.8rem !important;
     }
     
     .quiz-grid {
+        display: grid !important;
         grid-template-columns: repeat(2, 1fr) !important;
-        gap: 0.8rem !important;
+        gap: 0.5rem !important;
         max-width: 750px !important;
     }
 
     .quiz-btn {
-        padding: 0.6rem 1rem !important;
-        font-size: 0.9rem !important;
+        padding: 0.4rem 0.8rem !important;
+        font-size: 0.85rem !important;
         border-radius: 8px !important;
     }
 

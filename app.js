@@ -171,8 +171,8 @@ function processCustomsInput(isLeft) {
         playSound('good');
         updateScoreUI(gameState.score + 20);
         gameState.objects.shift();
-        if (gameState.speed < 7.5) {
-            gameState.speed += 0.3;
+        if (gameState.speed < 12.0) {
+            gameState.speed += 0.8;
         }
     } else {
         flashError();
@@ -344,8 +344,8 @@ function update() {
         if (gameState.spawnTimer > Math.max(40, 100 - gameState.speed * 10)) {
             spawnObject();
             gameState.spawnTimer = 0;
-            if (gameState.speed < 7) {
-                gameState.speed += 0.05; 
+            if (gameState.speed < 12) {
+                gameState.speed += 0.2; 
             }
         }
 
@@ -702,6 +702,7 @@ function finishQuiz() {
 let currentPuzzle = null;
 
 function initPuzzle() {
+    currentPuzzleIndex = Math.floor(Math.random() * gameState.puzzleWords.length);
     currentPuzzle = gameState.puzzleWords[currentPuzzleIndex];
     guessedLetters = [];
     wrongGuesses = 0;
