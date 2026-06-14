@@ -132,14 +132,14 @@ function resize() {
     let targetHeight = container.clientHeight;
     
     if (gameState.mode === 'route') {
-        // Limit aspect ratio to portrait (e.g. max width = 0.8 * height)
-        const maxRatio = 0.8;
+        // Allow wider aspect ratio in landscape
+        const maxRatio = 1.8;
         if (targetWidth > targetHeight * maxRatio) {
             targetWidth = targetHeight * maxRatio;
         }
     } else if (gameState.mode === 'customs') {
-        // Limit aspect ratio to balanced landscape (e.g. max width = 1.3 * height)
-        const maxRatio = 1.3;
+        // Allow wider aspect ratio in landscape
+        const maxRatio = 2.5;
         if (targetWidth > targetHeight * maxRatio) {
             targetWidth = targetHeight * maxRatio;
         }
@@ -719,31 +719,36 @@ function renderPuzzle() {
     const targetArea = document.getElementById('puzzle-target');
     targetArea.innerHTML = '';
     
-    const words = currentPuzzle.word.split(' ');
+    const container = document.createElement('div');
+    container.style.display = 'flex';
+    container.style.flexWrap = 'wrap';
+    container.style.justifyContent = 'center';
+    container.style.gap = 'clamp(4px, 1.5vw, 12px)';
+    
     let win = true;
 
-    words.forEach(wordStr => {
-        const wordRow = document.createElement('div');
-        wordRow.style.display = 'flex';
-        wordRow.style.gap = 'clamp(4px, 1.5vw, 12px)';
-        wordRow.style.justifyContent = 'center';
-        wordRow.style.marginBottom = 'clamp(4px, 1.5vw, 8px)';
-
-        for(let i=0; i<wordStr.length; i++) {
-            const char = wordStr[i];
-            const box = document.createElement('div');
-            box.className = 'letter-box';
-            
-            if (guessedLetters.includes(char)) {
-                box.innerText = char;
-                box.classList.add('filled');
-            } else {
-                win = false;
-            }
-            wordRow.appendChild(box);
+    for(let i=0; i<currentPuzzle.word.length; i++) {
+        const char = currentPuzzle.word[i];
+        
+        if (char === ' ') {
+            const spaceBox = document.createElement('div');
+            spaceBox.style.width = 'clamp(15px, 4vw, 30px)';
+            container.appendChild(spaceBox);
+            continue;
         }
-        targetArea.appendChild(wordRow);
-    });
+
+        const box = document.createElement('div');
+        box.className = 'letter-box';
+        
+        if (guessedLetters.includes(char)) {
+            box.innerText = char;
+            box.classList.add('filled');
+        } else {
+            win = false;
+        }
+        container.appendChild(box);
+    }
+    targetArea.appendChild(container);
 
     if (win) {
         playSound('win');
